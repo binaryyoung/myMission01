@@ -30,25 +30,21 @@ public class ApiExplorer {
 		/* 연결 자체에 대한 확인이 필요하므로 추가합니다.*/
 		// System.out.println("Response code: " + conn.getResponseCode()); 
 		
-		BufferedReader br;
+		BufferedReader rd;
 		
 		// 서비스코드가 정상이면 200~300사이의 숫자가 나옵니다.
 		if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-			br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		} else {
-			br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+			rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 		}
 		
-		StringBuffer response = new StringBuffer();
-		String inputLine = br.readLine();
+		String line = rd.readLine();
 		
-		while ((inputLine = br.readLine()) != null) {
-            response.append(inputLine);
-        }
-		
-		br.close();
+		rd.close();
 		conn.disconnect();
-		return response.toString();
+		
+		return line;
 	}
 	
 	private URL createUrlStringByRange(int beginIndex, int endIndex) throws UnsupportedEncodingException, MalformedURLException {
