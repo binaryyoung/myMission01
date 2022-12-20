@@ -11,12 +11,15 @@ import mission.infra.SQLiteManager;
 
 public class SqlliteConnectionTest {
 
+	
+	
+	
+	
+	
 	@Test
 	void test() throws SQLException {
 		SQLiteManager manager = new SQLiteManager();
-		 
         Connection conn = manager.createConnection();     // 연결
-        
         PreparedStatement ps;
         
         ps = conn.prepareStatement(" create table history ( "

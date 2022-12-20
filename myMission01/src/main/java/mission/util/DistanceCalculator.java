@@ -15,6 +15,8 @@ public class DistanceCalculator {
 	 * @param lon2 지점 2 경도
 	 * @param unit 거리 표출단위 
 	 * @return
+	 * 
+	 * - 클래스 내부의 static 변수나 외부파라미터에만 의존한다면 정적메서드를 사용하는 것이 낫다. 
 	 */
 	public static double getDistance(double lat1, double lon1, double lat2, double lon2, DistanceUnit distanceUnit) {
 		
