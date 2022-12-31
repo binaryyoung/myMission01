@@ -1,7 +1,9 @@
 package mission.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,13 +19,15 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
 import mission.domain.wifiinfo.WifiInfo;
 import mission.domain.wifiinfo.WifiInfoRepository;
+import mission.domain.wifiinfo.impl.WifiInfoJavaBeanRepository;
+import mission.domain.wifiinfo.impl.WifiInfoMariaDbRepository;
 import mission.infra.ApiExplorer;
 
 
-@WebServlet(urlPatterns = "/init")
+@WebServlet("/init")
 public class WifiInfoAddServlet extends HttpServlet{
 	
-	private WifiInfoRepository wifiInfoRepository = WifiInfoRepository.getInstance();
+	private WifiInfoRepository wifiInfoRepository = WifiInfoMariaDbRepository.getInstance();
 	
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,23 +48,23 @@ public class WifiInfoAddServlet extends HttpServlet{
 		String json = apiExplorer.requestApi(1, 1);
 		int listTotalCount = objectMapper.readTree(json).get("TbPublicWifiInfo").get("list_total_count").asInt();
 		
-		// System.out.println("listTotalCount=" + listTotalCount);
+		List<WifiInfo> list = new ArrayList<>();
+		
+		int cnt = 0;
 		
 		while (beginIndex < listTotalCount) {
-			// System.out.println("beginIndex=" + beginIndex);
-			// System.out.println("endIndex=" + endIndex);
-			
 			json = apiExplorer.requestApi(beginIndex, endIndex);
 			
 			String code = objectMapper.readTree(json).get("TbPublicWifiInfo").get("RESULT").get("CODE").asText();
-			if (!code.equals("INFO-000")) {
-				break;
+			if (!"INFO-000".equals(code)) {
+				throw new RuntimeException();
 			}
 			
 			Iterator<JsonNode> iterator = objectMapper.readTree(json).get("TbPublicWifiInfo").get("row").elements();
+			
 			iterator.forEachRemaining(j -> {
 					try {
-						wifiInfoRepository.save( objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE)
+						list.add( objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE)
 								.readerFor(WifiInfo.class)
 								.readValue(j.toString())
 								);
@@ -69,12 +73,14 @@ public class WifiInfoAddServlet extends HttpServlet{
 					}
 			});
 			
-			beginIndex += 1000;
+			beginIndex = endIndex + 1;
 			endIndex += 1000;
 		}
 		
+		int count = wifiInfoRepository.saveAll(list);
+		
 		// model
-		request.setAttribute("listTotalCount", listTotalCount);
+		request.setAttribute("listTotalCount", count);
 		
 		// 성공화면 이동.
 		String viewPath = "/load-wifi.jsp";

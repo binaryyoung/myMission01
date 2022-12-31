@@ -1,24 +1,6 @@
 package mission.domain.wifiinfo;
 
 public class WifiInfo {
-	/*
-	"X_SWIFI_MGR_NO":"서울-9091",
-	"X_SWIFI_WRDOFC":"송파구",
-	"X_SWIFI_MAIN_NM":"송파제일청소년독서실",
-	"X_SWIFI_ADRES1":"서울시 송파구가락로19길11",
-	"X_SWIFI_ADRES2":"송파제일청소년독서실 (옥내3)",
-	"X_SWIFI_INSTL_FLOOR":"",
-	"X_SWIFI_INSTL_TY":"6-4. 복지 - 아동청소년",
-	"X_SWIFI_INSTL_MBY":"디지털뉴딜(LG U+)",
-	"X_SWIFI_SVC_SE":"과기부WiFi(복지시설)",
-	"X_SWIFI_CMCWR":"이통사망",
-	"X_SWIFI_CNSTC_YEAR":"2022",
-	"X_SWIFI_INOUT_DOOR":"실내",
-	"X_SWIFI_REMARS3":"",
-	"LAT":"37.5032",
-	"LNT":"127.11062",
-	"WORK_DTTM":"2022-12-13 10:58:19.0"
-	*/
 	
 	private String xSwifiMgrNo; // X_SWIFI_MGR_NO
 	private String xSwifiWrdofc;  // X_SWIFI_WRDOFC
@@ -63,6 +45,10 @@ public class WifiInfo {
 		this.lnt = lnt;
 		this.workDttm = workDttm;
 		this.distance = distance;
+	}
+
+	public WifiInfo(String xSwifiMgrNo) {
+		this.xSwifiMgrNo = xSwifiMgrNo;
 	}
 
 	public String getxSwifiMgrNo() {
@@ -136,10 +122,5 @@ public class WifiInfo {
 	public void setDistance(Double distance) {
 		this.distance = distance;
 	}
-	
-	
-	
-	
-
 	
 }

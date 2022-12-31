@@ -13,7 +13,9 @@ import java.io.IOException;
 public class ApiExplorer {
 	
 	/**
-	 * 서울시 공공와이파이 정보를 가져온다.
+	 * 서울시 공공와이파이 정보를 가져온다. 
+	 * 
+	 * 주의 : 요청당 최대 1000건 조회 가능 (endIndex - beginIndex + 1 <= 1000)
 	 * 
 	 * @param beginIndex
 	 * @param endIndex
@@ -21,14 +23,11 @@ public class ApiExplorer {
 	 * @throws IOException
 	 */
 	public String requestApi(int beginIndex, int endIndex) throws IOException {
-		URL url = createUrlStringByRange(1, 1000);
+		URL url = createUrlStringByRange(beginIndex, endIndex);
 		
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Content-type", "application/json");
-		
-		/* 연결 자체에 대한 확인이 필요하므로 추가합니다.*/
-		// System.out.println("Response code: " + conn.getResponseCode()); 
 		
 		BufferedReader rd;
 		
@@ -42,6 +41,7 @@ public class ApiExplorer {
 		String line = rd.readLine();
 		
 		rd.close();
+
 		conn.disconnect();
 		
 		return line;

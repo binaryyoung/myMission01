@@ -1,7 +1,6 @@
 package mission.web;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,27 +9,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mission.domain.history.History;
 import mission.domain.history.HistoryRepository;
+import mission.domain.history.impl.HistoryJavaBeanRepository;
+import mission.domain.history.impl.HistoryMariaDbRepository;
 
-@WebServlet(urlPatterns = "/history")
-public class WifiInfoHistoryListServlet extends HttpServlet{
-	
-	
-	private HistoryRepository historyRepository = HistoryRepository.getInstance();
+@WebServlet("/history/delete")
+public class HistoryDeleteServlet extends HttpServlet{
+
+	private HistoryRepository historyRepository = HistoryMariaDbRepository.getInstance();
 	
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
-		List<History> historyList = historyRepository.findAll(); 
+		Long id = Long.parseLong(request.getParameter("id"));
 		
-		// 모델 추가
-		request.setAttribute("historyList", historyList);
+		historyRepository.delete(id);
 		
-		// 뷰 생성
-		String viewPath = "/index.jsp";
-        RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+		String servletPath = "/history";
+        RequestDispatcher dispatcher = request.getRequestDispatcher(servletPath);
         dispatcher.forward(request, response);
 	}
 }

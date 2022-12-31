@@ -51,7 +51,7 @@
     </thead>
     <tbody>
     <c:if test="${empty wifiInfoList}">
-    <div> 위치 정보를 입력한 후에 조회해 주세요.</div>
+    <tr> <td colspan="17" style="text-align:center;">위치 정보를 입력한 후에 조회해 주세요. </td></tr>
     </c:if>
     <c:if test="${!empty wifiInfoList}">
         <c:forEach var="wifiInfo" items="${wifiInfoList}">
